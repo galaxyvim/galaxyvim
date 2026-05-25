@@ -1,5 +1,3 @@
---──────────────────────▶ Key Mappings ◀───────────────────────────────
-
 local map = vim.keymap.set
 local opts = function(...)
   local default = { noremap = true, silent = true }
@@ -43,12 +41,7 @@ if nvim.plugins.ts_textobjects.enabled then
   map({ "n", "x", "o" }, "]c", textobjects.move("goto_next_start", "@class.outer"), { desc = "Next class start" })
   map({ "n", "x", "o" }, "]k", textobjects.move("goto_next_start", "@block.outer"), { desc = "Next block start" })
   map({ "n", "x", "o" }, "]f", textobjects.move("goto_next_start", "@function.outer"), { desc = "Next function start" })
-  map(
-    { "n", "x", "o" },
-    "]a",
-    textobjects.move("goto_next_start", "@parameter.inner"),
-    { desc = "Next argument start" }
-  )
+  map( { "n", "x", "o" }, "]a", textobjects.move("goto_next_start", "@parameter.inner"), { desc = "Next argument start" })
   map({ "n", "x", "o" }, "]s", textobjects.move("goto_next_start", "@local.scope", "locals"), { desc = "Next scope" })
   map({ "n", "x", "o" }, "]z", textobjects.move("goto_next_start", "@fold", "folds"), { desc = "Next fold" })
   -- goto_next_end
@@ -62,48 +55,18 @@ if nvim.plugins.ts_textobjects.enabled then
   -- goto_previous_start
   map({ "n", "x", "o" }, "[o", textobjects.move("goto_previous_start", "@loop.*"))
   map({ "n", "x", "o" }, "[d", textobjects.move("goto_previous_start", "@conditional.outer"))
-  map(
-    { "n", "x", "o" },
-    "[c",
-    textobjects.move("goto_previous_start", "@class.outer"),
-    { desc = "Previous class start" }
-  )
-  map(
-    { "n", "x", "o" },
-    "[k",
-    textobjects.move("goto_previous_start", "@block.outer"),
-    { desc = "Previous block start" }
-  )
-  map(
-    { "n", "x", "o" },
-    "[f",
-    textobjects.move("goto_previous_start", "@function.outer"),
-    { desc = "Previous function start" }
-  )
-  map(
-    { "n", "x", "o" },
-    "[a",
-    textobjects.move("goto_previous_start", "@parameter.inner"),
-    { desc = "Previous argument start" }
-  )
+  map({ "n", "x", "o" }, "[c", textobjects.move("goto_previous_start", "@class.outer"), { desc = "Previous class start" })
+  map({ "n", "x", "o" }, "[k", textobjects.move("goto_previous_start", "@block.outer"), { desc = "Previous block start" })
+  map({ "n", "x", "o" }, "[f", textobjects.move("goto_previous_start", "@function.outer"), { desc = "Previous function start" })
+  map({ "n", "x", "o" }, "[a", textobjects.move("goto_previous_start", "@parameter.inner"), { desc = "Previous argument start" })
 
   -- goto_previous_end
   map({ "n", "x", "o" }, "[O", textobjects.move("goto_previous_end", "@loop.*"))
   map({ "n", "x", "o" }, "[D", textobjects.move("goto_previous_end", "@conditional.outer"))
   map({ "n", "x", "o" }, "[c", textobjects.move("goto_previous_end", "@class.outer"), { desc = "Previous class start" })
   map({ "n", "x", "o" }, "[K", textobjects.move("goto_previous_end", "@block.outer"), { desc = "Previous block end" })
-  map(
-    { "n", "x", "o" },
-    "[F",
-    textobjects.move("goto_previous_end", "@function.outer"),
-    { desc = "Previous function end" }
-  )
-  map(
-    { "n", "x", "o" },
-    "[A",
-    textobjects.move("goto_previous_end", "@parameter.inner"),
-    { desc = "Previous argument end" }
-  )
+  map({ "n", "x", "o" }, "[F", textobjects.move("goto_previous_end", "@function.outer"), { desc = "Previous function end" })
+  map({ "n", "x", "o" }, "[A", textobjects.move("goto_previous_end", "@parameter.inner"), { desc = "Previous argument end" })
 
   ----------------------[ textobjects swap ]-------------------------------
   -- swap_next
@@ -117,14 +80,19 @@ if nvim.plugins.ts_textobjects.enabled then
   map("n", "<A", "@parameter.inner", { desc = "Swap previous argument" })
 end
 
--- Comment toggle on <leader>/
+-------------------------[ Comment Toggle ]-------------------------------
+
 vim.keymap.set("n", "<leader>/", "gcc", { remap = true, desc = "Comments" })
 vim.keymap.set("v", "<leader>/", "gc", { remap = true, desc = "Comments" })
 
+vim.keymap.set("i", "<C-_>", "<C-o>gcc", { remap = true, desc = "Comments" })
+vim.keymap.set("n", "<C-_>", "gcc", { remap = true, desc = "Comments" })
+vim.keymap.set("v", "<C-_>", "gc", { remap = true, desc = "Comments" })
+
 -------------------------[ Command Line ]-------------------------------
--- Ctrl + / to open command-line
-map({ "n", "x" }, "<C-_>", ":", { desc = "Open cmdline" })
-map({ "i" }, "<C-_>", "<Esc>:", { desc = "Open cmdline" })
+
+map("n", "<A-p>", ":", { desc = "Open cmdline" })
+map("i", "<A-p>", "<C-o>:", { desc = "Open cmdline" })
 
 ---------------------[ Clear Search Highlights ]-------------------------------
 
@@ -157,20 +125,14 @@ map("n", "<C-l>", "<C-w>l", opts { desc = "Move to right window" })
 -- Splitting & Resizing
 map("n", "<A-v>", ":vsplit<CR>", opts { desc = "Split window vertically" })
 map("n", "<A-h>", ":split<CR>", opts { desc = "Split window horizontally" })
-map("n", "<A-Up>", nvim.resize.up, opts { desc = "Increase window height" })
-map("n", "<A-Down>", nvim.resize.down, opts { desc = "Decrease window height" })
-map("n", "<A-Left>", nvim.resize.left, opts { desc = "Decrease window width" })
-map("n", "<A-Right>", nvim.resize.right, opts { desc = "Increase window width" })
 
 --------------------[ Smart Window Management ]-------------------------------
 
 if nvim.plugins.smart_splits.enabled then
   -- resizing splits
-  map("n", "<A-Up>", '<cmd>lua require("smart-splits").resize_up()<cr>', opts {})
-  map("n", "<A-Down>", '<cmd>lua require("smart-splits").resize_down()<cr>', opts {})
-  map("n", "<A-Left>", '<cmd>lua require("smart-splits").resize_left()<cr>', opts {})
-  map("n", "<A-Right>", '<cmd>lua require("smart-splits").resize_right()<cr>', opts {})
-  map("n", "<A-Left>", '<cmd>lua require("smart-splits").resize_left()<cr>', opts {})
+  map("n", "<A-S-Up>", '<cmd>lua require("smart-splits").resize_up()<cr>', opts {})
+  map("n", "<A-S-Down>", '<cmd>lua require("smart-splits").resize_down()<cr>', opts {})
+  map("n", "<A-S-Left>", '<cmd>lua require("smart-splits").resize_left()<cr>', opts {})
   map("n", "<A-Right>", '<cmd>lua require("smart-splits").resize_right()<cr>', opts {})
   map("n", "<C-Left>", '<cmd>lua require("smart-splits").resize_left()<cr>', opts {})
   map("n", "<C-Right>", '<cmd>lua require("smart-splits").resize_right()<cr>', opts {})
@@ -198,8 +160,43 @@ map("i", "<A-j>", '<ESC>"zyy"zP', opts { desc = "Duplicate line down" })
 map("i", "<A-k>", '<ESC>"zyy"zp', opts { desc = "Duplicate line up" })
 
 -- VISUAL mode: Duplicate selection (without yank)
-map("x", "<A-j>", '"zy"zPgv<ESC>', opts { desc = "Duplicate selection down" })
-map("x", "<A-k>", '"zy"zPgvgk<ESC>', opts { desc = "Duplicate selection up" })
+map("v", "<A-j>", '"zyo<Esc>"zP', opts { desc = "Duplicate line down" })
+map("v", "<A-k>", '"zyO<Esc>"zp', opts { desc = "Duplicate line up" })
+
+------------------------[ Move Lines ]-------------------------------
+
+-- Visual mode: move selected lines / indent
+map("v", "J", ":m '>+1<CR>gv=gv", opts { desc = "Move selection down" })
+map("v", "K", ":m '<-2<CR>gv=gv", opts { desc = "Move selection up" })
+map("v", "L", ">gv", opts { desc = "Indent selection right" })
+map("v", "H", "<gv", opts { desc = "Indent selection left" })
+
+map("v", "<A-Down>", ":m '>+1<CR>gv=gv", opts { desc = "Move selection down" })
+map("v", "<A-Up>", ":m '<-2<CR>gv=gv", opts { desc = "Move selection up" })
+map("v", "<A-Right>", ">gv", opts { desc = "Indent selection right" })
+map("v", "<A-Left>", "<gv", opts { desc = "Indent selection left" })
+
+-- Normal mode: move / indent current line
+map("n", "J", ":m .+1<CR>==", opts { desc = "Move line down" })
+map("n", "K", ":m .-2<CR>==", opts { desc = "Move line up" })
+map("n", "L", ">>", opts { desc = "Indent line right" })
+map("n", "H", "<<", opts { desc = "Indent line left" })
+
+map("n", "<A-Down>", ":m .+1<CR>==", opts { desc = "Move line down" })
+map("n", "<A-Up>", ":m .-2<CR>==", opts { desc = "Move line up" })
+map("n", "<A-Right>", ">>", opts { desc = "Indent line right" })
+map("n", "<A-Left>", "<<", opts { desc = "Indent line left" })
+
+-- Insert mode: move / indent current line
+map("i", "<A-Down>", "<Esc>:m .+1<CR>==gi", opts { desc = "Move line down" })
+map("i", "<A-Up>", "<Esc>:m .-2<CR>==gi", opts { desc = "Move line up" })
+map("i", "<A-Left>", "<Esc><<gi", opts { desc = "Indent line left" })
+map("i", "<A-Right>", "<Esc>>>gi", opts { desc = "Indent line right" })
+
+----------------------[ Line Insertion ]-------------------------------
+
+map("n", "<A-Enter>", "o", opts { desc = "Insert new line below" })
+map("i", "<A-Enter>", "<C-o>o", opts { desc = "Insert new line below" })
 
 ---------------------[ Buffer Management ]-------------------------------
 
@@ -215,20 +212,6 @@ map({ "n", "i" }, "<C-b>b", nvim.buffer.previous, opts { desc = "Previous buffer
 map({ "n", "i" }, "<C-b><Left>", nvim.buffer.close_left, opts { desc = "Close buffers to left" })
 map({ "n", "i" }, "<C-b><Right>", nvim.buffer.close_right, opts { desc = "Close buffers to right" })
 
-------------------------[ Move Lines ]-------------------------------
-
--- Visual mode: move selected lines / indent
-map("v", "J", ":m '>+1<CR>gv=gv", opts { desc = "Move selection down" })
-map("v", "K", ":m '<-2<CR>gv=gv", opts { desc = "Move selection up" })
-map("v", "L", ">gv", opts { desc = "Indent selection right" })
-map("v", "H", "<gv", opts { desc = "Indent selection left" })
-
--- Normal mode: move / indent current line
-map("n", "J", ":m .+1<CR>==", opts { desc = "Move line down" })
-map("n", "K", ":m .-2<CR>==", opts { desc = "Move line up" })
-map("n", "L", ">>", opts { desc = "Indent line right" })
-map("n", "H", "<<", opts { desc = "Indent line left" })
-
 ------------------------[ Save & Exit ]-------------------------------
 
 -- Save the file with Ctrl+S
@@ -240,20 +223,13 @@ map("i", "<C-s>", "<Esc><cmd>w<CR>`^i", opts { desc = "Save file" })
 map("n", "<C-q>", "<cmd>q<CR>", opts { desc = "Exit Editor" })
 map("i", "<C-q>", "<Esc><cmd>q<CR>", opts { desc = "Exit Editor" })
 
-------------------[ Delete, Copy, Paste, Redo ]-------------------------------
-
--- Copy (yank) to system clipboard with Ctrl+C
-map("v", "<C-c>", '"+y', opts { desc = "Copy to system clipboard" })
-map("n", "<C-c>", '"+yy', opts { desc = "Copy to system clipboard" })
-map("i", "<C-c>", '<C-o>"+yy', opts { desc = "Copy to system clipboard" })
-map("n", "<A-c>", "<cmd>%y+<cr>", opts { desc = "Copy all to clipboard" })
+------------------[ Delete, Copy, Cut, Paste, Redo ]-------------------------------
 
 -- Delete without Copy (yank)
 map({ "n", "v" }, "d", '"_d', opts { desc = "Delete without yank" })
 
 -- Delete character without Copy
-map("n", "x", '"_x', opts { desc = "Delete character after cursor" })
-map("i", "<C-x>", '<C-o>"_x', opts { desc = "Delete character after cursor" })
+map("n", "x", '"_x', opts { desc = "Delete character" })
 
 -- Delete word without Copy
 map("i", "<C-d>", '<C-o>"_dB', opts { desc = "Delete word before cursor" })
@@ -261,20 +237,31 @@ map("i", "<A-d>", '<C-o>"_dE', opts { desc = "Delete word after cursor" })
 map("i", "<C-BS>", '<C-o>"_dB', opts { desc = "Delete word before cursor" })
 map("i", "<C-S-BS>", '<C-o>"_dE', opts { desc = "Delete word after cursor" })
 
+-- Copy (yank) to system clipboard with Ctrl+C
+map("v", "<C-c>", '"+y', opts { desc = "Copy to system clipboard" })
+map("n", "<C-c>", '"+yy', opts { desc = "Copy to system clipboard" })
+map("i", "<C-c>", '<C-o>"+yy', opts { desc = "Copy to system clipboard" })
+map("n", "<A-c>", "<cmd>%y+<cr>", opts { desc = "Copy all to clipboard" })
+
+-- Cut with Ctrl-X
+map("n", "<C-x>", "dd", opts { desc = "Cut the lines" })
+map("i", "<C-x>", "<C-o>dd", opts { desc = "Cut the lines" })
+map("v", "<C-x>", "d", opts { desc = "Cut the lines" })
+
 -- Paste without Copy (yank)
 map("x", "p", nvim.ui.vpaste, opts { desc = "Paste without yank" })
 
 -- Paste with Ctrl+V
-map("i", "<C-v>", "<ESC>pa", opts { desc = "Paste after cursor" })
+map("i", "<C-v>", '<C-r><C-o>+', opts { desc = "Paste from system clipboard" })
 
--- Redo with Ctrl+U
+-- Undo with Alt+z
+map("n", "<A-z>", "u", opts { desc = "Undo last operation" })
+map("i", "<A-z>", "<C-o>u", opts { desc = "Undo last operation" })
+
+-- Redo with Ctrl+U / Alt+Shift+z
 map("n", "U", "<C-r>", opts { desc = "Redo last operation" })
-
-----------------------[ Line Navigation ]-------------------------------
-
--- Line Navigation with HOME, 0, ^ = Ctrl+a | END, $ = Ctrl+e
-map({ "i", "v" }, "<A-a>", "<HOME>", opts { desc = "Goto start of current line" }) -- start of line
-map({ "i", "v" }, "<A-e>", "<END>", opts { desc = "Goto end of current line" }) -- end of line
+map("n", "<A-S-z>", "<C-r>", opts { desc = "Redo last operation" })
+map("i", "<A-S-z>", "<C-o><C-r>", opts { desc = "Redo last operation" })
 
 ------------------------[ Terminal ]-------------------------------
 
@@ -296,6 +283,5 @@ map({ "n", "v", "i" }, "<M-f>", nvim.ui.format, opts { desc = "Format buffer / s
 map("n", "<A-F>", nvim.toggle.lsp.format_on_save, opts { desc = "Toggle format on save" })
 
 -----------------------------------------------------------------------
-
 map("n", "<localleader><localleader>", function() end)
 nvim.load("mappings.whichkey")

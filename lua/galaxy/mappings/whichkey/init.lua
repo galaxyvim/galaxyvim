@@ -19,6 +19,14 @@ wk.icon = function(...)
 end
 
 wk.mappings = {
+  -- open whichkey
+  {
+    mode = { "n", "i" },
+    "<C-\\>",
+    function()
+      vim.cmd.WhichKey "<leader>"
+    end,
+  },
   -- alpha
   {
     "<leader>a",
